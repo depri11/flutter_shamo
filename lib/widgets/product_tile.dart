@@ -49,7 +49,9 @@ class ProductTile extends StatelessWidget {
                 ),
                 Text(
                   '\$87.87',
-                  style: priceTextStyle,
+                  style: priceTextStyle.copyWith(
+                    fontWeight: medium,
+                  ),
                 ),
               ],
             ),

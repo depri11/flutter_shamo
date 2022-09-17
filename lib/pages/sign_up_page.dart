@@ -226,13 +226,15 @@ class SignUpPage extends StatelessWidget {
     ));
   }
 
-  Widget _btnSignUp() {
+  Widget _btnSignUp(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: defaultMargin),
       width: double.infinity,
       height: 50,
       child: TextButton(
-        onPressed: () => {},
+        onPressed: () => {
+          Navigator.pushNamed(context, '/home'),
+        },
         style: TextButton.styleFrom(
             backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
@@ -262,7 +264,7 @@ class SignUpPage extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/sign-in'),
+            onTap: () => Navigator.pop(context),
             child: Text(
               'Sign In',
               style: purpleTextStyle.copyWith(
@@ -291,7 +293,7 @@ class SignUpPage extends StatelessWidget {
               _userName(),
               _emailAddress(),
               _password(),
-              _btnSignUp(),
+              _btnSignUp(context),
               Spacer(),
               _footer(context),
             ],

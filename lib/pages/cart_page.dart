@@ -4,8 +4,6 @@ import 'package:shamo/theme.dart';
 import '../widgets/cart_card.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
@@ -75,9 +73,83 @@ class CartPage extends StatelessWidget {
 
     Widget content() {
       return ListView(
+        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
         children: [
           CartCard(),
         ],
+      );
+    }
+
+    Widget customBottomNav() {
+      return Container(
+        height: 165,
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: defaultMargin,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Subtotal',
+                    style: primaryTextStyle,
+                  ),
+                  Text(
+                    '\$287,96',
+                    style: priceTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: semiBold,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Divider(
+              thickness: 0.3,
+              color: subtitleColor,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              height: 50,
+              margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/checkout');
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Continue Checkout',
+                      style: primaryTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: primaryTextColor,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -85,6 +157,7 @@ class CartPage extends StatelessWidget {
       backgroundColor: backgroundColor3,
       appBar: header(),
       body: content(),
+      bottomNavigationBar: customBottomNav(),
     );
   }
 }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:shamo/theme.dart';
 
 class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController(text: '');
+    TextEditingController passwordController = TextEditingController(text: '');
+
     Widget header() {
       return Container(
           margin: EdgeInsets.only(top: defaultMargin),
@@ -66,6 +70,7 @@ class SignInPage extends StatelessWidget {
                     Expanded(
                       child: TextFormField(
                         style: primaryTextStyle,
+                        controller: emailController,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Adress',
                           hintStyle: subtitleTextStyle,
@@ -122,6 +127,7 @@ class SignInPage extends StatelessWidget {
                       child: TextFormField(
                         style: primaryTextStyle,
                         obscureText: true,
+                        controller: passwordController,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Password',
                           hintStyle: subtitleTextStyle,
@@ -146,9 +152,7 @@ class SignInPage extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/home');
-          },
+          onPressed: () {},
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(

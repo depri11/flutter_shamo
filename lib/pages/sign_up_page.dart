@@ -3,54 +3,62 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:shamo/provider/auth_provider.dart';
 import 'package:shamo/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo/widgets/loaidng_button.dart';
 
 import '../models/user_model.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController usernameController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
 
-  Future<UserModel?> register(
-    String name,
-    String username,
-    String email,
-    String password,
-  ) async {
-    try {
-      var url = Uri.parse('http://192.168.1.6:8001/api/v1/register');
-      var headers = {'Content-Type': 'application/json'};
-      var body = jsonEncode({
-        'name': name,
-        'username': username,
-        'email': email,
-        'password': password,
-      });
-
-      var response = await http.post(
-        url,
-        headers: headers,
-        body: body,
-      );
-
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        UserModel user = UserModel.fromJson(data['data']);
-        user.token = 'Bearer ' + data['other']['token'];
-        print('data user $user');
-        return user;
-      }
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    handleSignUp() async {
+      setState(() {
+        isLoading = true;
+      });
+      if (nameController.text.isNotEmpty &&
+          usernameController.text.isNotEmpty &&
+          emailController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty) {
+        await authProvider.register(
+          fullname: nameController.text,
+          username: usernameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        Navigator.pushNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: alertColor,
+            content: Text(
+              'Register Failed!',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     Widget _header() {
       return Container(
         margin: EdgeInsets.only(top: defaultMargin),
@@ -286,11 +294,7 @@ class SignUpPage extends StatelessWidget {
         height: 50,
         child: TextButton(
           onPressed: () {
-            register(
-                nameController.text.toString(),
-                usernameController.text.toString(),
-                emailController.text.toString(),
-                passwordController.text.toString());
+            handleSignUp();
           },
           style: TextButton.styleFrom(
               backgroundColor: primaryColor,
@@ -348,7 +352,7 @@ class SignUpPage extends StatelessWidget {
               _userName(),
               _emailAddress(),
               _password(),
-              _btnSignUp(context),
+              isLoading ? LoadingButton() : _btnSignUp(context),
               Spacer(),
               _footer(context),
             ],
